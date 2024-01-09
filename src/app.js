@@ -3,7 +3,7 @@ import express from "express";
 import { ProductManager } from './files/productManager.js';
 
 // Se importa express poder crear un server y ponerlo a escuchar, asi también la clase ProductManager para poder crear una nueva instancia.
-const productManager = new ProductManager("./files/products.json");
+const productManager = new ProductManager("./src/files/products.json");
 
 const port = 8080;
 

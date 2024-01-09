@@ -8,13 +8,9 @@ Este repositorio contiene un proyecto de backend desarrollado en JavaScript util
 
 2) Instalar las dependencias:
 - npm install
-Configuración del Proyecto
 
-3) Posicionarse en la carpeta "src" que conteniene el archivo app.js:
-- cd src
-
-4) Abrir el servidor:
-- nodemon app.js
+3) Abrir el servidor:
+- npm start
 
 El servidor se iniciará en http://localhost:8080.
 
