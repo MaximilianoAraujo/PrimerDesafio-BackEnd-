@@ -1,53 +1,58 @@
-# Gestor de Carritos y Productos
-Este proyecto implementa un gestor de carritos y productos en JavaScript utilizando Node.js y Express. Permite realizar las siguientes acciones:
+# Gestión de Carritos, Chats y Productos con WebSockets
+Este repositorio contiene código JavaScript para gestionar carritos de compras, mensajes de chat y productos, utilizando una base de datos MongoDB y WebSockets para comunicación en tiempo real.
 
-* Crear un nuevo carrito.
-* Obtener un carrito por su ID.
-* Añadir productos a un carrito existente.
-* Añadir nuevos productos a la lista de productos.
-* Obtener la lista de productos.
-* Obtener un producto por su ID.
-* Actualizar la información de un producto.
-* Eliminar un producto de la lista.
+## Funcionalidades
+El código proporciona clases para tres tipos de gestores, cada uno destinado a un propósito específico, y también incluye la funcionalidad de chat en tiempo real y la gestión de productos en tiempo real a través de WebSockets.
+
+* CartManagerDB
+- addCart(): Método para agregar un nuevo carrito a la base de datos.
+- getCartById(cid): Método para buscar un carrito por su ID en la base de datos.
+- addProdToCart(cid, pid): Método para agregar un producto a un carrito existente en la base de datos, junto con su ID de carrito (cid) y el ID de producto (pid).
+
+* ChatManagerDB
+- addMessage(data): Método para agregar un nuevo mensaje de chat a la base de datos, utilizando un objeto con la información del usuario y el mensaje.
+- getAllMessages(): Método para obtener todos los mensajes de chat almacenados en la base de datos.
+
+* ProductManagerDB
+- addProduct(prod): Método para agregar un nuevo producto a la base de datos.
+- getProducts(limit): Método para obtener una lista de productos de la base de datos, con la opción de especificar un límite.
+- getProductById(id): Método para obtener un producto por su ID en la base de datos.
+- updateProduct(id, updatedFields): Método para actualizar un producto existente en la base de datos, proporcionando su ID y los campos actualizados.
+- deleteProduct(id): Método para eliminar un producto de la base de datos por su ID.
+
+## Funcionalidades adicionales de WebSockets
+- Chat en Tiempo Real: Los usuarios pueden enviar mensajes en tiempo real y ver los mensajes de otros usuarios sin necesidad de recargar la página.
+- Gestión de Productos en Tiempo Real: Los cambios en la lista de productos (agregar o eliminar productos) se reflejan automáticamente en la interfaz de usuario de todos los clientes conectados.
+
+## Instrucciones para Ejecutar el Proyecto
+Para ejecutar este proyecto en tu máquina local, sigue los siguientes pasos:
+
+1. Clonar el Repositorio
+Primero, clona este repositorio en tu máquina local. Puedes hacerlo ejecutando el siguiente comando en tu terminal:
+
+- git clone <https://github.com/MaximilianoAraujo/quintoDesafio-BackEnd.git>
+
+2. Instalar Dependencias
+Ve al directorio del proyecto y asegúrate de tener Node.js y npm instalados en tu sistema. Luego, instala las dependencias del proyecto ejecutando el siguiente comando:
+
+- npm install
+
+3. Configurar la Base de Datos
+Asegúrate de tener MongoDB instalado y ejecutándose en tu sistema.
+
+4. Conexión a la Base de Datos
+Abre el archivo tu_archivo.js y encuentra la función connectDB(). Asegúrate de que la URL de conexión a tu base de datos MongoDB sea correcta. Si es necesario, cámbiala para que coincida con tu configuración de MongoDB.
+
+5. Ejecutar el Servidor
+Una vez configurada la base de datos, puedes ejecutar el servidor Node.js. Para hacerlo, ejecuta el siguiente comando en tu terminal:
+
+- npm start
+Esto iniciará el servidor y establecerá la conexión con la base de datos MongoDB.
+
+6. Acceder a la Aplicación
+Una vez que el servidor esté en funcionamiento, abre tu navegador web y accede a la dirección http://localhost:8080. Aquí encontrarás la interfaz de usuario de la aplicación, donde podrás gestionar carritos de compras, enviar mensajes de chat en tiempo real y administrar productos.
 
 
-## Estructura de los Datos
 
-### Carritos
-Los carritos se almacenan en un archivo JSON en la carpeta files. Cada carrito tiene un ID único y una lista de productos con sus ID y cantidades.
 
-### Productos
-Los productos se almacenan en otro archivo JSON en la carpeta files. Cada producto tiene un ID único, título, descripción, categoría, precio, código, stock y estado.
 
-## Uso del Código
-El código se organiza en módulos para la gestión de productos y carritos. Puedes interactuar con él a través de las rutas API o las vistas en tiempo real.
-
-### Rutas API
-* /api/products: Permite realizar operaciones en la lista de productos.
-* /api/carts: Permite crear nuevos carritos y añadir productos a ellos.
-
-### Rutas de Vistas en Tiempo Real
-* /: Muestra la lista completa de productos.
-* /realtimeproducts: Permite añadir o eliminar productos en tiempo real.
-
-## Uso de Socket.io
-Se utiliza Socket.io para actualizar en tiempo real la lista de productos cuando se añade o elimina un producto.
-
-## Configuración de Handlebars
-Las vistas se generan utilizando el motor de plantillas Handlebars para una experiencia de usuario más amigable.
-
-## Requisitos
-Asegúrate de tener Node.js instalado en tu sistema antes de ejecutar el proyecto.
-
-## Instalación
-1. Clona este repositorio en tu máquina local.
-2. Abre una terminal en la carpeta raíz del proyecto.
-3. Ejecuta el siguiente comando para instalar las dependencias:
-* npm install
-
-## Ejecución
-Para ejecutar la aplicación, utiliza el siguiente comando:
-
-* npm start
-
-La aplicación estará disponible en http://localhost:8080.

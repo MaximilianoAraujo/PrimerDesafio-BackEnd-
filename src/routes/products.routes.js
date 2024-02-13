@@ -1,49 +1,42 @@
 import { Router } from "express";
-import { ProductManager } from '../models/productManager.js';
 
-const productManager = new ProductManager("./src/files/products.json");
+import { ProductManagerDB } from "../dao/db/managers/productManagerDB.js"
+const productManagerDB = new ProductManagerDB();
 
 const router = Router();
 
-// Se configura una ruta que devuelve una lista completa de los productos. Se usa req.query que devuelve una lista limitada según el valor que se le pasa.
+// Se modifico la ruta para consultar la lista de productos en la base de datos de Mongo.
 router.get("/", async (req, res) => {
     try {
         const limit = parseInt(req.query.limit);
-        const products = await productManager.getProducts();
-        if (limit) {
-            const prodsLimit = products.slice(0, limit);
-            res.status(200).send(prodsLimit)
-        } else {
-            res.status(200).send(products);
-        }
+        const products = await productManagerDB.getProducts(limit);
+        res.status(200).send({ "Lista de Productos": products });
     } catch (error) {
         res.status(500).send(`Error al obtener los productos: ${error.message}`);
     }
 });
 
-// Se configura una ruta que devuelve un producto específico de la lista de productos. Se usa el ID como parametro de búsqueda.
+// Se modifico la ruta para buscar un producto por id en la base de datos de Mongo
 router.get("/:pid", async (req, res) => {
     try {
-        const id = parseInt(req.params.pid);
-        const productById = await productManager.getProductById(id);
+        const id = req.params.pid;
+        const productById = await productManagerDB.getProductById(id);
         if (productById) {
             res.status(200).send({ "Producto encontrado": productById });
         } else {
-            res.status(404).send({ "Error": "No se encontró el producto" });
+            res.status(404).send({ "Error": "No se encontró el producto. Vea la consola para más detalles" });
         }
     } catch (error) {
         res.status(500).send(`Error al obtener el producto: ${error.message}`);
     }
 });
 
-// Se configura una ruta que agrega un nuevo producto a la lista
+// Se modifico la ruta para POST para agregar un producto en la base de datos de Mongo
 router.post("/", async (req, res) => {
     try {
-        const bodyProd = req.body;
-        const addProd = await productManager.addProduct(bodyProd.title, bodyProd.description, bodyProd.category, bodyProd.price, bodyProd.thumbnail, bodyProd.code, bodyProd.stock);
-        console.log(addProd)
-        if (addProd) {
-            res.status(201).send({ 'Nuevo producto agregado exitosamente!': addProd });
+        const prod = await productManagerDB.addProduct(req.body);
+        if (prod) {
+            res.status(201).send(`Se agrego correctamente el producto con ID: ${prod.id}`)
         } else {
             res.status(400).send({ 'Error': 'No se pudo agregar el producto. Vea la consola para más detalles' })
         }
@@ -52,12 +45,12 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Se configura una ruta que actualiza un producto de la lista
+// Se modifico la ruta PUT para actualizar un producto en la base de datos de Mongo
 router.put("/:pid", async (req, res) => {
     try {
-        const pid = parseInt(req.params.pid);
+        const pid = req.params.pid;
         const bodyprod = req.body;
-        const updatedProduct = await productManager.updateProduct(pid, bodyprod);
+        const updatedProduct = await productManagerDB.updateProduct(pid, bodyprod);
         if (updatedProduct) {
             res.status(200).send({ 'Producto Actualizado': updatedProduct});
         } else {
@@ -68,11 +61,11 @@ router.put("/:pid", async (req, res) => {
     }
 });
 
-// Se configura una ruta que elimina un producto de la lista
+// Se modifico la ruta DELETE para eliminar un producto en la base de datos de Mongo
 router.delete("/:pid", async (req, res) => {
     try {
-        const pid = parseInt(req.params.pid);
-        const deletedProduct = await productManager.deleteProduct(pid);
+        const pid = req.params.pid;
+        const deletedProduct = await productManagerDB.deleteProduct(pid);
         if (deletedProduct) {
             res.status(200).send({ 'Producto eliminado de la lista': deletedProduct});
         } else {

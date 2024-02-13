@@ -7,13 +7,12 @@ const addProd = () => {
         description: document.getElementById('description').value,
         category: document.getElementById('category').value,
         price: document.getElementById('price').value,
-        thumbnail: document.getElementById('thumbnail').value,
+        // thumbnail: document.getElementById('thumbnail').value,
         code: document.getElementById('code').value,
         stock: document.getElementById('stock').value
     }
-    console.log(prod)
 
-    socketClient.emit('AddNewProduct', prod);
+    socketClient.emit('AddNewProduct', {prod});
 
     const formElement = document.getElementById('productForm');
     formElement.reset();
@@ -27,10 +26,10 @@ socketClient.on("listProducts", (data) => {
     data.forEach(element => {
         productsElements +=
             `<div class="list">
-                <p>Producto ${element.id} - ${element.title}</p>
+                <p>Producto: ${element.title}</p>
                 <p>Precio: ${element.price}</p>
                 <p>Código: ${element.code} || Stock: ${element.stock}</p>
-                <button class="delProd" onClick="deleteProd(${element.id})">Eliminar producto</button>
+                <button class="delProd" onClick="deleteProd('${element._id}')">Eliminar producto</button>
             </div>`
     });
 
@@ -42,7 +41,6 @@ const deleteProd = (id) => {
     if (confirm("¿Quieres confirmar la eliminación de este producto de la lista?")) {
         socketClient.emit("deleteProduct", id);
     }
-
 }
 
 // Evento para mostrar un mensaje si el producto no se agrega

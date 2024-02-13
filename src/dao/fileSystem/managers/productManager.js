@@ -67,8 +67,7 @@ export class ProductManager {
             }
         } catch (error) {
             console.log(error.message);
-        }
-        
+        }       
     }
 
     // Metodo para obtener la lista de productos del archivo products.json

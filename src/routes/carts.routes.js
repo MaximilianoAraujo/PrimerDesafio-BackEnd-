@@ -1,26 +1,25 @@
 import { Router } from "express";
-import { CartManager } from "../models/cartManager.js";
 
-const cartManager = new CartManager("./src/files/carts.json");
+import { CartManagerDB } from "../dao/db/managers/cartManagerDB.js";
+const cartManagerDB = new CartManagerDB();
 
 const router = Router();
 
-// Se configura una ruta POST que crea un nuevo carrito.
+// Se modifico la ruta POST para agregar un carrito en la base de datos de Mongo
 router.post("/", async (req,res) => {
     try {
-        const newCart = await cartManager.addCart();
+        const newCart = await cartManagerDB.addCart();
         res.status(201).send(newCart);
     } catch (error) {
         res.status(500).send(`Error al crear el carrito: ${error.message}`)
     }
 });
 
-// Se configura una ruta GET que busca un carrito por su ID y muestra sus productos
+// Se modifico la ruta para obtener un carrito por id en la base de datos de Mongo
 router.get("/:cid", async (req,res) => {
     try {
-        const cid = parseInt(req.params.cid);
-        const cartByID = await cartManager.getCartById(cid);
-    
+        const cid = req.params.cid;
+        const cartByID = await cartManagerDB.getCartById(cid);
         if(cartByID) {
             res.status(200).send({"Carrito encontrado": cartByID});
         } else {
@@ -31,13 +30,13 @@ router.get("/:cid", async (req,res) => {
     }
 })
 
-// Se configura una ruta POST que la cual añade un producto especifico al carrito seleccionado
+// Se modifico la ruta para agregar un producto a un carrito en la base de datos de Mongo
 router.post("/:cid/product/:pid", async (req, res) => {
     try {
-        const cid = parseInt(req.params.cid);
-        const pid = parseInt(req.params.pid);
+        const cid = req.params.cid;
+        const pid = req.params.pid;
     
-        const prodToCart = await cartManager.addProdToCart(cid, pid);
+        const prodToCart = await cartManagerDB.addProdToCart(cid, pid);
     
         if (prodToCart) {
             res.status(200).send("Producto agregado al carrito correctamente!");
